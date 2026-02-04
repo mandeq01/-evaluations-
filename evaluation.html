@@ -1,80 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hospital Evaluation</title>
-<link rel="stylesheet" href="style.css">
+  <title>Evaluate Hospital</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<header>
-    <h1>Hospital Evaluation Portal</h1>
-    <p id="login-warning" class="warning"></p>
-</header>
+<h2>Hospital Evaluation</h2>
 
-<main>
-  <section id="instructions">
-    <p>Welcome! Please evaluate your chosen hospital based on the categories below. You must login to submit an evaluation. Ratings are from 1 (lowest) to 5 (highest).</p>
-  </section>
+<p id="warning"></p>
 
-  <form id="evaluationForm">
+<select id="hospital">
+  <option value="">Select Hospital</option>
+  <option>Digfeer Hospital</option>
+  <option>Martini Hospital</option>
+</select>
 
-    <fieldset>
-      <legend>Hospital Information</legend>
-      <label for="hospital">Select Hospital</label>
-      <select id="hospital">
-        <option value="">-- Select Hospital --</option>
-        <option value="Kalkaal">Kalkaal Hospital</option>
-        <option value="Banadir">Banadir Hospital</option>
-        <option value="Digfeer">Digfeer Hospital</option>
-      </select>
+<div id="stars">
+  <span onclick="rate(1)">★</span>
+  <span onclick="rate(2)">★</span>
+  <span onclick="rate(3)">★</span>
+  <span onclick="rate(4)">★</span>
+  <span onclick="rate(5)">★</span>
+</div>
 
-      <label for="eval-name">Your Full Name</label>
-      <input type="text" id="eval-name" placeholder="Enter your name">
-    </fieldset>
+<textarea id="comment" placeholder="Write review..."></textarea>
 
-    <fieldset>
-      <legend>Evaluation Categories</legend>
+<button onclick="submitReview()">Submit Evaluation</button>
 
-      <label>Doctor Service</label>
-      <div class="rating" data-aspect="doctor">
-        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-      </div>
+<p id="result"></p>
 
-      <label>Waiting Time</label>
-      <div class="rating" data-aspect="waiting">
-        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-      </div>
-
-      <label>Cleanliness</label>
-      <div class="rating" data-aspect="cleanliness">
-        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-      </div>
-
-      <label>Treatment Quality</label>
-      <div class="rating" data-aspect="treatment">
-        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-      </div>
-
-      <label>Staff Behavior</label>
-      <div class="rating" data-aspect="staff">
-        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-      </div>
-
-      <label>Equipment & Facilities</label>
-      <div class="rating" data-aspect="equipment">
-        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-      </div>
-
-    </fieldset>
-
-    <button type="submit" id="submitBtn">Submit Evaluation</button>
-    <button type="reset" id="resetBtn">Reset</button>
-
-  </form>
-</main>
-
-<script src="script.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
