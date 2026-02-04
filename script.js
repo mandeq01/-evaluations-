@@ -1,72 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-/* ================= SIGNUP ================= */
-let signupForm = document.getElementById("signupForm");
-if (signupForm) {
-  signupForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    let name = document.getElementById("signup-name").value.trim();
-    let email = document.getElementById("signup-email").value.trim();
-    let pass = document.getElementById("signup-password").value;
-    let pass2 = document.getElementById("signup-password2").value;
-    let msg = document.getElementById("signup-message");
-
-    if (/\d/.test(name)) {
-      msg.textContent = "Name must contain letters only";
-      msg.style.color = "red";
-      return;
-    }
-
-    if (pass.length < 6) {
-      msg.textContent = "Password must be at least 6 characters";
-      msg.style.color = "red";
-      return;
-    }
-
-    if (pass !== pass2) {
-      msg.textContent = "Passwords do not match";
-      msg.style.color = "red";
-      return;
-    }
-
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("userPass", pass);
-
-    msg.textContent = "Signup successful. Please login.";
-    msg.style.color = "green";
-    signupForm.reset();
-  });
-}
-
-/* ================= LOGIN ================= */
-let loginForm = document.getElementById("loginForm");
-if (loginForm) {
-  loginForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    let email = document.getElementById("login-email").value.trim();
-    let pass = document.getElementById("login-password").value;
-    let msg = document.getElementById("login-message");
-
-    if (
-      email === localStorage.getItem("userEmail") &&
-      pass === localStorage.getItem("userPass")
-    ) {
-      localStorage.setItem("loggedInUser", email);
-      msg.textContent = "Login successful!";
-      msg.style.color = "green";
-      setTimeout(function () {
-        window.location.href = "evaluation.html";
-      }, 800);
-    } else {
-      msg.textContent = "Invalid email or password";
-      msg.style.color = "red";
-    }
-  });
-}
-
-/* ================= EVALUATION ACCESS ================= */
+/* ========= LOGIN CHECK ========= */
 let evalForm = document.getElementById("evaluationForm");
 let warning = document.getElementById("login-warning");
 
@@ -74,15 +8,20 @@ if (evalForm) {
   let loggedIn = localStorage.getItem("loggedInUser");
 
   if (!loggedIn) {
-    evalForm.remove(); // 🔥 REAL BLOCK
-    warning.textContent = "⚠️ Please login to evaluate hospitals";
+    // hide evaluation completely
+    evalForm.style.display = "none";
+
+    // show message
+    warning.style.display = "block";
     warning.style.color = "red";
     warning.style.fontWeight = "bold";
-    return;
+    warning.style.textAlign = "center";
+
+    return; // STOP ALL evaluation JS
   }
 }
 
-/* ================= STAR RATING ================= */
+/* ========= STAR RATINGS ========= */
 let ratings = {};
 let ratingBlocks = document.querySelectorAll(".rating");
 
@@ -99,18 +38,18 @@ ratingBlocks.forEach(function (block) {
   });
 });
 
-/* ================= SUBMIT EVALUATION ================= */
+/* ========= SUBMIT EVALUATION ========= */
 if (evalForm) {
   evalForm.addEventListener("submit", function (e) {
     e.preventDefault();
 
     let hospital = document.getElementById("hospital").value;
     if (!hospital) {
-      alert("Select a hospital");
+      alert("Please select a hospital");
       return;
     }
 
-    let aspects = ["doctor", "waiting", "cleanliness", "treatment", "staff"];
+    let aspects = ["doctor","waiting","cleanliness","treatment","staff"];
     for (let i = 0; i < aspects.length; i++) {
       if (!ratings[aspects[i]]) {
         alert("Please rate " + aspects[i]);
@@ -122,30 +61,9 @@ if (evalForm) {
     localStorage.setItem("totalEvals", total);
     localStorage.setItem("lastHospital", hospital);
 
-    alert("Evaluation submitted successfully");
+    alert("Evaluation submitted successfully!");
     evalForm.reset();
     ratings = {};
-  });
-}
-
-/* ================= CONTACT ================= */
-let contactForm = document.getElementById("contactForm");
-if (contactForm) {
-  contactForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    let name = document.getElementById("contact-name").value.trim();
-    let feedback = document.getElementById("contact-feedback");
-
-    if (/\d/.test(name)) {
-      feedback.textContent = "Name cannot contain numbers";
-      feedback.style.color = "red";
-      return;
-    }
-
-    feedback.textContent = "Message sent successfully!";
-    feedback.style.color = "green";
-    contactForm.reset();
   });
 }
 
