@@ -9,26 +9,25 @@
 
 <header>
   <h1>Hospital Evaluation System</h1>
+  <p>Rate hospitals based on real patient experience</p>
 </header>
 
 <main>
 
-  <!-- LOGIN WARNING -->
-  <div id="login-warning" class="warning" style="display:none;">
-    ⚠️ Please login before evaluating hospitals.
-  </div>
+  <!-- LOGIN WARNING MESSAGE -->
+  <div id="login-warning" class="warning"></div>
 
-  <!-- EVALUATION FORM -->
+  <!-- EVALUATION FORM (ALWAYS VISIBLE) -->
   <form id="evaluationForm">
 
     <h2>Evaluate a Hospital</h2>
 
     <label for="hospital">Select Hospital</label>
     <select id="hospital">
-      <option value="">-- Select --</option>
+      <option value="">-- Choose Hospital --</option>
       <option value="Kalkaal">Kalkaal Hospital</option>
-      <option value="Shafi">Shafi Hospital</option>
       <option value="Digfeer">Digfeer Hospital</option>
+      <option value="Shafi">Shafi Hospital</option>
     </select>
 
     <div class="rating" data-aspect="doctor">
