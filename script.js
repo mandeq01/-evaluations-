@@ -1,102 +1,81 @@
-document.addEventListener("DOMContentLoaded", function () {
+let rating = 0;
+let reviews = [];
 
-    let loggedIn = localStorage.getItem("loggedInUser");
+// LOGIN CHECK
+window.onload = function () {
+  let isLoggedIn = localStorage.getItem("isLoggedIn");
 
-    let warning = document.getElementById("login-warning");
-    let hospital = document.getElementById("hospital");
-    let submitBtn = document.getElementById("submitBtn");
-    let resetBtn = document.getElementById("resetBtn");
-    let ratings = {};
-    let ratingBoxes = document.querySelectorAll(".rating");
+  if (!isLoggedIn) {
+    document.getElementById("loginMessage").textContent =
+      "You must login to evaluate hospitals.";
+    document.getElementById("loginMessage").style.color = "red";
 
-    // ---------- LOGIN CONTROL ----------
-    if (!loggedIn) {
-        warning.textContent = "⚠ You must login before evaluating hospitals!";
-        hospital.disabled = true;
-        submitBtn.disabled = true;
-        resetBtn.disabled = true;
+    document.getElementById("submitBtn").disabled = true;
+  } else {
+    document.getElementById("loginMessage").textContent =
+      "You are logged in. You can submit evaluations.";
+    document.getElementById("loginMessage").style.color = "green";
+  }
+};
 
-        ratingBoxes.forEach(function (box) {
-            box.style.pointerEvents = "none";
-            box.style.opacity = "0.4";
-        });
-
-    } else {
-        warning.textContent = "";
-        hospital.disabled = false;
-        submitBtn.disabled = false;
-        resetBtn.disabled = false;
-
-        ratingBoxes.forEach(function (box) {
-            box.style.pointerEvents = "auto";
-            box.style.opacity = "1";
-        });
-    }
-
-    // ---------- STAR RATING ----------
-    ratingBoxes.forEach(function (box) {
-        let stars = box.querySelectorAll("span");
-
-        stars.forEach(function (star, index) {
-            star.addEventListener("click", function () {
-
-                if (!loggedIn) {
-                    alert("Please login before evaluating!");
-                    return;
-                }
-
-                stars.forEach(function (s, i) {
-                    s.className = i <= index ? "selected" : "";
-                });
-
-                ratings[box.dataset.aspect] = index + 1;
-            });
-        });
-    });
-
-    // ---------- SUBMIT ----------
-    document.getElementById("evaluationForm").addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        if (!loggedIn) {
-            alert("You must login before evaluating!");
-            return;
-        }
-
-        let name = document.getElementById("eval-name").value.trim();
-        if (!/^[A-Za-z\s]+$/.test(name)) {
-            alert("Name must contain letters only!");
-            return;
-        }
-
-        if (hospital.value === "") {
-            alert("Select a hospital!");
-            return;
-        }
-
-        let requiredAspects = ["doctor", "waiting", "cleanliness", "treatment", "staff", "equipment"];
-        for (let a of requiredAspects) {
-            if (!ratings[a]) {
-                alert("Please rate all categories!");
-                return;
-            }
-        }
-
-        alert("✅ Evaluation submitted successfully!");
-        this.reset();
-        ratings = {};
-
-        document.querySelectorAll(".selected").forEach(function (s) {
-            s.classList.remove("selected");
-        });
-    });
-
-    // ---------- RESET ----------
-    resetBtn.addEventListener("click", function () {
-        ratings = {};
-        document.querySelectorAll(".selected").forEach(function (s) {
-            s.classList.remove("selected");
-        });
-    });
-
+// STAR RATING
+document.querySelectorAll("#stars span").forEach(star => {
+  star.addEventListener("click", function () {
+    rating = this.dataset.value;
+    updateStars(rating);
+  });
 });
+
+function updateStars(value) {
+  let stars = document.querySelectorAll("#stars span");
+  stars.forEach((star, index) => {
+    star.style.color = index < value ? "gold" : "gray";
+  });
+}
+
+// SUBMIT EVALUATION
+document.getElementById("submitBtn").addEventListener("click", function () {
+  let hospital = document.getElementById("hospital").value;
+  let feedback = document.getElementById("feedback").value;
+  let message = document.getElementById("formMessage");
+
+  if (hospital === "" || rating === 0 || feedback === "") {
+    message.textContent = "All fields are required and rating must be selected.";
+    message.style.color = "red";
+    return;
+  }
+
+  let review = {
+    hospital: hospital,
+    rating: rating,
+    feedback: feedback
+  };
+
+  reviews.push(review);
+  displayReviews();
+
+  message.textContent = "Evaluation submitted successfully!";
+  message.style.color = "green";
+
+  document.getElementById("hospital").value = "";
+  document.getElementById("feedback").value = "";
+  updateStars(0);
+  rating = 0;
+});
+
+// DISPLAY REVIEWS
+function displayReviews() {
+  let list = document.getElementById("reviewList");
+  list.innerHTML = "";
+
+  reviews.forEach(r => {
+    let div = document.createElement("div");
+    div.className = "review-card";
+    div.innerHTML = `
+      <strong>${r.hospital}</strong><br>
+      Rating: ${r.rating} ★<br>
+      ${r.feedback}
+    `;
+    list.appendChild(div);
+  });
+}
