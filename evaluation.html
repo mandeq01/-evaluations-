@@ -1,1 +1,79 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluate Hospitals</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Evaluate Hospitals</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="signup.html">Signup</a>
+    <a href="login.html">Login</a>
+    <a href="evaluation.html">Evaluate</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <div id="login-warning" style="display:none;"></div>
+
+  <div id="evaluation-container">
+    <form id="evaluationForm">
+      <label>Select Hospital:</label>
+      <select id="hospital">
+        <option value="">--Select--</option>
+        <option value="Kalkaal">Kalkaal Hospital</option>
+        <option value="Shafi">Shafi Hospital</option>
+        <option value="Digfeer">Digfeer Hospital</option>
+      </select>
+
+      <div class="rating" data-aspect="doctor">
+        <p>Doctor:</p>
+        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+      </div>
+
+      <div class="rating" data-aspect="waiting">
+        <p>Waiting Time:</p>
+        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+      </div>
+
+      <div class="rating" data-aspect="cleanliness">
+        <p>Cleanliness:</p>
+        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+      </div>
+
+      <div class="rating" data-aspect="treatment">
+        <p>Treatment Quality:</p>
+        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+      </div>
+
+      <div class="rating" data-aspect="staff">
+        <p>Staff Behavior:</p>
+        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+      </div>
+
+      <button type="submit">Submit Evaluation</button>
+      <button type="button" id="reset-eval">Reset</button>
+    </form>
+  </div>
+
+  <div class="stats">
+    <p>Total Evaluations: <span id="total-evals">0</span></p>
+    <p>Last Hospital: <span id="last-hospital">None</span></p>
+    <p>Average Rating: <span id="avg-rating">0</span></p>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2026 Hospital Evaluation Portal</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
