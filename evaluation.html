@@ -1,35 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Evaluate Hospital</title>
-  <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <title>Hospital Evaluation System</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h2>Hospital Evaluation</h2>
+<header>
+  <h1>Somali Hospital Evaluation System</h1>
+  <p>Evaluate hospitals to improve healthcare quality</p>
+</header>
 
-<p id="warning"></p>
+<section class="intro">
+  <h2>Why Hospital Evaluation Matters</h2>
+  <p>
+    Hospital evaluation helps patients share experiences, promotes accountability,
+    and improves healthcare services across Somalia.
+  </p>
+</section>
 
-<select id="hospital">
-  <option value="">Select Hospital</option>
-  <option>Digfeer Hospital</option>
-  <option>Martini Hospital</option>
-</select>
+<section class="login-status">
+  <p id="loginMessage"></p>
+</section>
 
-<div id="stars">
-  <span onclick="rate(1)">★</span>
-  <span onclick="rate(2)">★</span>
-  <span onclick="rate(3)">★</span>
-  <span onclick="rate(4)">★</span>
-  <span onclick="rate(5)">★</span>
-</div>
+<section class="evaluation-form">
+  <h2>Evaluate a Hospital</h2>
 
-<textarea id="comment" placeholder="Write review..."></textarea>
+  <label>Choose Hospital</label>
+  <select id="hospital">
+    <option value="">-- Select Hospital --</option>
+    <option>Digfeer Hospital</option>
+    <option>Martini Hospital</option>
+    <option>Banadir Hospital</option>
+    <option>Medina Hospital</option>
+  </select>
 
-<button onclick="submitReview()">Submit Evaluation</button>
+  <label>Rate the Service</label>
+  <div id="stars">
+    <span data-value="1">★</span>
+    <span data-value="2">★</span>
+    <span data-value="3">★</span>
+    <span data-value="4">★</span>
+    <span data-value="5">★</span>
+  </div>
 
-<p id="result"></p>
+  <label>Your Feedback</label>
+  <textarea id="feedback" placeholder="Write your experience..."></textarea>
 
-<script src="js/app.js"></script>
+  <button id="submitBtn">Submit Evaluation</button>
+
+  <p id="formMessage"></p>
+</section>
+
+<section class="results">
+  <h2>Submitted Evaluations</h2>
+  <div id="reviewList"></div>
+</section>
+
+<footer>
+  <p>© 2026 Somali Hospital Evaluation System</p>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
