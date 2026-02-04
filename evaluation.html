@@ -1,66 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Hospital Evaluation</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Hospital Evaluation</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
-  <h1>Hospital Evaluation System</h1>
-  <p>Rate hospitals based on real patient experience</p>
-</header>
+<h1>Hospital Evaluation</h1>
 
-<main>
+<p id="login-warning" class="warning"></p>
 
-  <!-- LOGIN WARNING MESSAGE -->
-  <div id="login-warning" class="warning"></div>
+<form id="evaluationForm">
 
-  <!-- EVALUATION FORM (ALWAYS VISIBLE) -->
-  <form id="evaluationForm">
+  <label>Hospital</label>
+  <select id="hospital">
+    <option value="">-- Select Hospital --</option>
+    <option value="Kalkaal">Kalkaal Hospital</option>
+    <option value="Banadir">Banadir Hospital</option>
+    <option value="Digfeer">Digfeer Hospital</option>
+  </select>
 
-    <h2>Evaluate a Hospital</h2>
+  <label>Your Name</label>
+  <input type="text" id="eval-name">
 
-    <label for="hospital">Select Hospital</label>
-    <select id="hospital">
-      <option value="">-- Choose Hospital --</option>
-      <option value="Kalkaal">Kalkaal Hospital</option>
-      <option value="Digfeer">Digfeer Hospital</option>
-      <option value="Shafi">Shafi Hospital</option>
-    </select>
+  <label>Doctor Service</label>
+  <div class="rating" data-aspect="doctor">
+    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+  </div>
 
-    <div class="rating" data-aspect="doctor">
-      <p>Doctor Quality</p>
-      <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-    </div>
+  <label>Cleanliness</label>
+  <div class="rating" data-aspect="clean">
+    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+  </div>
 
-    <div class="rating" data-aspect="waiting">
-      <p>Waiting Time</p>
-      <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-    </div>
+  <button id="submitBtn" type="submit">Submit Evaluation</button>
 
-    <div class="rating" data-aspect="cleanliness">
-      <p>Cleanliness</p>
-      <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-    </div>
-
-    <div class="rating" data-aspect="treatment">
-      <p>Treatment Quality</p>
-      <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-    </div>
-
-    <div class="rating" data-aspect="staff">
-      <p>Staff Behavior</p>
-      <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-    </div>
-
-    <button type="submit">Submit Evaluation</button>
-    <button type="reset">Reset</button>
-
-  </form>
-
-</main>
+</form>
 
 <script src="script.js"></script>
 </body>
