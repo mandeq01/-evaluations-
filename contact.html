@@ -1,42 +1,89 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact - Hospital Ratings</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Contact | Somali Health Review</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
 </head>
 <body>
-<header>
-  <h1>Contact Us</h1>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="signup.html">Signup</a>
-    <a href="login.html">Login</a>
-    <a href="evaluation.html">Evaluate</a>
-    <a href="about.html">About</a>
-    <a href="contact.html">Contact</a>
-  </nav>
+
+<!-- ================= HEADER ================= -->
+<header class="main-header">
+  <div class="header-content">
+    <h1>Contact Us</h1>
+    <p>
+      Have questions, feedback, or suggestions? Reach out to the Somali Health Review team.
+      We value your input and will respond as soon as possible.
+    </p>
+  </div>
 </header>
 
-<main>
-  <form id="contactForm">
-    <label>Full Name:</label>
-    <input type="text" id="contact-name" required>
-    <label>Email:</label>
-    <input type="email" id="contact-email" required>
-    <label>Message:</label>
-    <textarea id="contact-message" required></textarea>
-    <button type="submit">Send Message</button>
-    <p id="contact-feedback"></p>
-  </form>
-</main>
+<!-- ================= NAVIGATION ================= -->
+<nav class="main-nav">
+  <a href="index.html">Home</a>
+  <a href="evaluation.html">Evaluate</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <a href="login.html">Login</a>
+</nav>
 
-<footer>
-  <p>&copy; 2026 Hospital Evaluation Portal</p>
+<!-- ================= CONTACT FORM ================= -->
+<section class="section">
+  <div class="card">
+    <h2>Send Us a Message</h2>
+    <p class="section-note">
+      Fill out the form below and our team will get back to you promptly.
+    </p>
+
+    <div class="form-group">
+      <label for="contactName">Full Name</label>
+      <input type="text" id="contactName" placeholder="Your full name">
+    </div>
+
+    <div class="form-group">
+      <label for="contactEmail">Email</label>
+      <input type="email" id="contactEmail" placeholder="you@example.com">
+    </div>
+
+    <div class="form-group">
+      <label for="contactMessage">Message</label>
+      <textarea id="contactMessage" placeholder="Type your message here"></textarea>
+    </div>
+
+    <button class="primary-btn" onclick="sendMessage()">
+      Send Message
+    </button>
+
+    <div id="contactFeedback" class="feedback"></div>
+  </div>
+</section>
+
+<!-- ================= CONTACT INFORMATION ================= -->
+<section class="section card">
+  <h2>Our Office</h2>
+  <p>
+    Somali Health Review Headquarters<br>
+    Mogadishu, Somalia<br>
+    Email: info@somalihealthreview.so<br>
+    Phone: +252 61 234 5678
+  </p>
+
+  <h3>Follow Us</h3>
+  <ul class="info-list">
+    <li>Facebook: SomaliHealthReview</li>
+    <li>Twitter: @SomHealthReview</li>
+    <li>Instagram: @SomHealthReview</li>
+  </ul>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="main-footer">
+  <p>
+    Somali Health Review System © 2026 <br>
+    Connecting citizens with healthcare quality insights
+  </p>
 </footer>
 
-<script src="script.js"></script>
 </body>
 </html>
