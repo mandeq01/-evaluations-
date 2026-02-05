@@ -1,81 +1,345 @@
-let rating = 0;
-let reviews = [];
+/* ======================================================
+   GLOBAL DATA STORAGE
+====================================================== */
 
-// LOGIN CHECK
-window.onload = function () {
-  let isLoggedIn = localStorage.getItem("isLoggedIn");
+// Store all evaluations in memory (array of objects)
+let evaluations = [];
 
-  if (!isLoggedIn) {
-    document.getElementById("loginMessage").textContent =
-      "You must login to evaluate hospitals.";
-    document.getElementById("loginMessage").style.color = "red";
-
-    document.getElementById("submitBtn").disabled = true;
-  } else {
-    document.getElementById("loginMessage").textContent =
-      "You are logged in. You can submit evaluations.";
-    document.getElementById("loginMessage").style.color = "green";
-  }
+// Current evaluation being filled
+let currentEvaluation = {
+  hospital: "",
+  cleanliness: 0,
+  staff: 0,
+  waitingTime: 0,
+  equipment: 0,
+  overall: 0,
+  average: 0,
+  reviewer: ""
 };
 
-// STAR RATING
-document.querySelectorAll("#stars span").forEach(star => {
-  star.addEventListener("click", function () {
-    rating = this.dataset.value;
-    updateStars(rating);
-  });
-});
+/* ======================================================
+   VALIDATION UTILITIES
+====================================================== */
 
-function updateStars(value) {
-  let stars = document.querySelectorAll("#stars span");
-  stars.forEach((star, index) => {
-    star.style.color = index < value ? "gold" : "gray";
-  });
+// Name must contain letters and spaces only
+function isValidName(name) {
+  const pattern = /^[A-Za-z\s]+$/;
+  return pattern.test(name);
 }
 
-// SUBMIT EVALUATION
-document.getElementById("submitBtn").addEventListener("click", function () {
-  let hospital = document.getElementById("hospital").value;
-  let feedback = document.getElementById("feedback").value;
-  let message = document.getElementById("formMessage");
+// Strong password validation
+function isStrongPassword(password) {
+  const pattern =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+  return pattern.test(password);
+}
 
-  if (hospital === "" || rating === 0 || feedback === "") {
-    message.textContent = "All fields are required and rating must be selected.";
-    message.style.color = "red";
+/* ======================================================
+   LOGIN SYSTEM
+====================================================== */
+
+function loginUser() {
+  const nameInput = document.getElementById("username");
+  const passInput = document.getElementById("password");
+  const feedback = document.getElementById("loginFeedback");
+
+  if (!nameInput || !passInput) return;
+
+  const name = nameInput.value.trim();
+  const password = passInput.value;
+
+  // Empty check
+  if (name === "" || password === "") {
+    showMessage(feedback, "All fields are required.", "error");
     return;
   }
 
-  let review = {
-    hospital: hospital,
-    rating: rating,
-    feedback: feedback
-  };
+  // Name validation
+  if (!isValidName(name)) {
+    showMessage(
+      feedback,
+      "Name must contain letters only (no numbers or symbols).",
+      "error"
+    );
+    return;
+  }
 
-  reviews.push(review);
-  displayReviews();
+  // Password validation
+  if (!isStrongPassword(password)) {
+    showMessage(
+      feedback,
+      "Password must be strong (8+ chars, upper, lower, number, symbol).",
+      "error"
+    );
+    return;
+  }
 
-  message.textContent = "Evaluation submitted successfully!";
-  message.style.color = "green";
+  // Save login state
+  localStorage.setItem("isLoggedIn", "true");
+  localStorage.setItem("userName", name);
 
-  document.getElementById("hospital").value = "";
-  document.getElementById("feedback").value = "";
-  updateStars(0);
-  rating = 0;
-});
+  showMessage(
+    feedback,
+    "Login successful. Evaluation access granted.",
+    "success"
+  );
+}
 
-// DISPLAY REVIEWS
-function displayReviews() {
-  let list = document.getElementById("reviewList");
-  list.innerHTML = "";
+/* ======================================================
+   PAGE PROTECTION (IMPORTANT)
+====================================================== */
 
-  reviews.forEach(r => {
-    let div = document.createElement("div");
-    div.className = "review-card";
-    div.innerHTML = `
-      <strong>${r.hospital}</strong><br>
-      Rating: ${r.rating} ★<br>
-      ${r.feedback}
-    `;
-    list.appendChild(div);
+function protectEvaluationPage() {
+  const loggedIn = localStorage.getItem("isLoggedIn");
+  const warning = document.getElementById("loginWarning");
+  const form = document.querySelector(".evaluation-form");
+
+  if (!form) return;
+
+  if (!loggedIn) {
+    if (warning) {
+      warning.textContent = "You must login to evaluate hospitals.";
+      warning.style.color = "red";
+    }
+
+    // Lock the evaluation form
+    form.classList.add("locked");
+  } else {
+    if (warning) {
+      const user = localStorage.getItem("userName");
+      warning.textContent = "Welcome " + user + ". You can evaluate hospitals.";
+      warning.style.color = "green";
+    }
+  }
+}
+
+/* ======================================================
+   STAR RATING SYSTEM (MULTI-CRITERIA)
+====================================================== */
+
+function setupStarRatings() {
+  const starGroups = document.querySelectorAll(".stars");
+
+  starGroups.forEach(group => {
+    const category = group.dataset.category;
+    const stars = group.querySelectorAll("span");
+
+    stars.forEach((star, index) => {
+      star.addEventListener("click", () => {
+        updateStars(group, index + 1);
+        currentEvaluation[category] = index + 1;
+      });
+    });
   });
 }
+
+function updateStars(group, value) {
+  const stars = group.querySelectorAll("span");
+  stars.forEach((star, index) => {
+    star.classList.toggle("active", index < value);
+  });
+}
+
+/* ======================================================
+   EVALUATION SUBMISSION
+====================================================== */
+
+function submitEvaluation() {
+  const hospitalSelect = document.getElementById("hospital");
+  const feedbackBox = document.getElementById("evaluationMessage");
+
+  if (!hospitalSelect) return;
+
+  currentEvaluation.hospital = hospitalSelect.value;
+  currentEvaluation.reviewer = localStorage.getItem("userName");
+
+  // Validation
+  if (
+    currentEvaluation.hospital === "" ||
+    currentEvaluation.cleanliness === 0 ||
+    currentEvaluation.staff === 0 ||
+    currentEvaluation.waitingTime === 0 ||
+    currentEvaluation.equipment === 0 ||
+    currentEvaluation.overall === 0
+  ) {
+    showMessage(
+      feedbackBox,
+      "Please complete all rating categories before submitting.",
+      "error"
+    );
+    return;
+  }
+
+  // Calculate average
+  currentEvaluation.average = calculateAverage(currentEvaluation);
+
+  // Save evaluation
+  evaluations.push({ ...currentEvaluation });
+
+  // Display reviews dynamically
+  renderEvaluations();
+
+  showMessage(
+    feedbackBox,
+    "Evaluation submitted successfully.",
+    "success"
+  );
+
+  resetEvaluationForm();
+}
+
+/* ======================================================
+   CALCULATIONS
+====================================================== */
+
+function calculateAverage(e) {
+  const total =
+    e.cleanliness +
+    e.staff +
+    e.waitingTime +
+    e.equipment +
+    e.overall;
+
+  return (total / 5).toFixed(1);
+}
+
+/* ======================================================
+   DISPLAY REVIEWS (DOM MANIPULATION)
+====================================================== */
+
+function renderEvaluations() {
+  const container = document.getElementById("reviewContainer");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  evaluations.forEach(e => {
+    const card = document.createElement("div");
+    card.className = "review-card";
+
+    card.innerHTML = `
+      <strong>${e.hospital}</strong><br>
+      Reviewer: ${e.reviewer}<br>
+      Cleanliness: ${e.cleanliness} ★<br>
+      Staff: ${e.staff} ★<br>
+      Waiting Time: ${e.waitingTime} ★<br>
+      Equipment: ${e.equipment} ★<br>
+      Overall: ${e.overall} ★<br>
+      <strong>Average Rating: ${e.average} ★</strong>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+/* ======================================================
+   RESET FORM AFTER SUBMISSION
+====================================================== */
+
+function resetEvaluationForm() {
+  currentEvaluation = {
+    hospital: "",
+    cleanliness: 0,
+    staff: 0,
+    waitingTime: 0,
+    equipment: 0,
+    overall: 0,
+    average: 0,
+    reviewer: ""
+  };
+
+  const stars = document.querySelectorAll(".stars span");
+  stars.forEach(star => star.classList.remove("active"));
+
+  const hospitalSelect = document.getElementById("hospital");
+  if (hospitalSelect) hospitalSelect.value = "";
+}
+
+/* ======================================================
+   ANALYTICS GENERATION
+====================================================== */
+
+function generateAnalytics() {
+  const analyticsBox = document.getElementById("analyticsBox");
+  if (!analyticsBox) return;
+
+  let summary = {};
+
+  evaluations.forEach(e => {
+    if (!summary[e.hospital]) {
+      summary[e.hospital] = [];
+    }
+    summary[e.hospital].push(parseFloat(e.average));
+  });
+
+  analyticsBox.innerHTML = "";
+
+  for (let hospital in summary) {
+    const avg =
+      summary[hospital].reduce((a, b) => a + b, 0) /
+      summary[hospital].length;
+
+    const div = document.createElement("div");
+    div.className = "analytics-box";
+    div.innerHTML = `
+      <h3>${hospital}</h3>
+      <p>Average Rating: ${avg.toFixed(1)} ★</p>
+      <p>Total Reviews: ${summary[hospital].length}</p>
+    `;
+
+    analyticsBox.appendChild(div);
+  }
+}
+
+/* ======================================================
+   CONTACT FORM
+====================================================== */
+
+function sendMessage() {
+  const name = document.getElementById("contactName");
+  const email = document.getElementById("contactEmail");
+  const message = document.getElementById("contactMessage");
+  const feedback = document.getElementById("contactFeedback");
+
+  if (!name || !email || !message) return;
+
+  if (
+    name.value.trim() === "" ||
+    email.value.trim() === "" ||
+    message.value.trim() === ""
+  ) {
+    showMessage(feedback, "All fields are required.", "error");
+    return;
+  }
+
+  showMessage(
+    feedback,
+    "Thank you for your message. We will respond shortly.",
+    "success"
+  );
+
+  name.value = "";
+  email.value = "";
+  message.value = "";
+}
+
+/* ======================================================
+   UTILITY: FEEDBACK MESSAGES
+====================================================== */
+
+function showMessage(element, text, type) {
+  if (!element) return;
+
+  element.textContent = text;
+  element.className = "feedback " + type;
+}
+
+/* ======================================================
+   INITIALIZATION ON PAGE LOAD
+====================================================== */
+
+window.addEventListener("load", () => {
+  protectEvaluationPage();
+  setupStarRatings();
+  generateAnalytics();
+});
