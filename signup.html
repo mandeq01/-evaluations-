@@ -1,44 +1,134 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Signup - Hospital Ratings</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Sign Up | Somali Health Review</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
 </head>
 <body>
-<header>
-  <h1>Signup</h1>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="signup.html">Signup</a>
-    <a href="login.html">Login</a>
-    <a href="evaluation.html">Evaluate</a>
-    <a href="about.html">About</a>
-    <a href="contact.html">Contact</a>
-  </nav>
+
+<!-- ================= HEADER ================= -->
+<header class="main-header">
+  <div class="header-content">
+    <h1>Create an Account</h1>
+    <p>
+      Join the Somali Health Review platform and contribute to improving
+      healthcare services by providing honest and responsible evaluations
+      of hospitals across Somalia.
+    </p>
+  </div>
 </header>
 
-<main>
-  <form id="signupForm">
-    <label>Full Name:</label>
-    <input type="text" id="signup-name" required>
-    <label>Email:</label>
-    <input type="email" id="signup-email" required>
-    <label>Password:</label>
-    <input type="password" id="signup-password" required>
-    <label>Confirm Password:</label>
-    <input type="password" id="signup-password2" required>
-    <button type="submit">Signup</button>
-    <p id="signup-message"></p>
-  </form>
-</main>
+<!-- ================= NAVIGATION ================= -->
+<nav class="main-nav">
+  <a href="index.html">Home</a>
+  <a href="evaluation.html">Evaluate</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <a href="login.html">Login</a>
+  <a href="signup.html">Sign Up</a>
+</nav>
 
-<footer>
-  <p>&copy; 2026 Hospital Evaluation Portal</p>
+<!-- ================= SIGNUP FORM ================= -->
+<section class="section">
+  <div class="card">
+
+    <h2>User Registration</h2>
+    <p class="section-note">
+      Please provide accurate information. Fake or misleading data
+      may result in restricted access.
+    </p>
+
+    <!-- Full Name -->
+    <div class="form-group">
+      <label for="signupName">Full Name</label>
+      <input
+        type="text"
+        id="signupName"
+        placeholder="Example: Amina Hassan"
+      >
+      <small>
+        Only letters and spaces are allowed.
+      </small>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label for="signupEmail">Email Address</label>
+      <input
+        type="email"
+        id="signupEmail"
+        placeholder="example@email.com"
+      >
+      <small>
+        A valid email address is required for account recovery.
+      </small>
+    </div>
+
+    <!-- Password -->
+    <div class="form-group">
+      <label for="signupPassword">Password</label>
+      <input
+        type="password"
+        id="signupPassword"
+        placeholder="Create a strong password"
+      >
+      <small>
+        Password must be at least 8 characters and include uppercase,
+        lowercase, number, and special character.
+      </small>
+    </div>
+
+    <!-- Confirm Password -->
+    <div class="form-group">
+      <label for="confirmPassword">Confirm Password</label>
+      <input
+        type="password"
+        id="confirmPassword"
+        placeholder="Re-enter password"
+      >
+    </div>
+
+    <!-- Action -->
+    <button class="primary-btn" onclick="registerUser()">
+      Create Account
+    </button>
+
+    <!-- Feedback -->
+    <div id="signupFeedback" class="feedback"></div>
+
+  </div>
+</section>
+
+<!-- ================= BENEFITS SECTION ================= -->
+<section class="section">
+  <div class="card">
+
+    <h2>Why Create an Account?</h2>
+
+    <ul class="info-list">
+      <li>Submit verified hospital evaluations</li>
+      <li>Help identify healthcare strengths and weaknesses</li>
+      <li>Contribute to national healthcare improvement</li>
+      <li>Access future features and reports</li>
+    </ul>
+
+    <p class="section-note">
+      This platform promotes transparency, responsibility,
+      and constructive feedback.
+    </p>
+
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="main-footer">
+  <p>
+    Somali Health Review System © 2026 <br>
+    Empowering citizens through healthcare feedback
+  </p>
 </footer>
 
-<script src="script.js"></script>
 </body>
 </html>
