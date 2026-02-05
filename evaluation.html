@@ -2,66 +2,138 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Hospital Evaluation System</title>
+  <title>Hospital Evaluation | Somali Health Review</title>
   <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
 </head>
 <body>
 
-<header>
-  <h1>Somali Hospital Evaluation System</h1>
-  <p>Evaluate hospitals to improve healthcare quality</p>
+<!-- ================= HEADER ================= -->
+<header class="main-header">
+  <div class="header-content">
+    <h1>Hospital Evaluation Portal</h1>
+    <p>
+      Evaluate Somali hospitals based on cleanliness, staff professionalism,
+      waiting time, medical equipment, and overall patient experience.
+      This system helps improve healthcare quality nationwide.
+    </p>
+  </div>
 </header>
 
-<section class="intro">
-  <h2>Why Hospital Evaluation Matters</h2>
-  <p>
-    Hospital evaluation helps patients share experiences, promotes accountability,
-    and improves healthcare services across Somalia.
-  </p>
+<!-- ================= NAVIGATION ================= -->
+<nav class="main-nav">
+  <a href="index.html">Home</a>
+  <a href="evaluation.html">Evaluate</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <a href="login.html">Login</a>
+</nav>
+
+<!-- ================= LOGIN WARNING ================= -->
+<section class="section">
+  <p id="loginWarning" class="section-note"></p>
 </section>
 
-<section class="login-status">
-  <p id="loginMessage"></p>
-</section>
+<!-- ================= EVALUATION FORM ================= -->
+<section class="section">
+  <div class="card evaluation-form">
 
-<section class="evaluation-form">
-  <h2>Evaluate a Hospital</h2>
+    <h2>Hospital Evaluation Form</h2>
+    <p class="section-note">
+      Please rate the hospital honestly. Your feedback is anonymous and used
+      only for quality improvement analysis.
+    </p>
 
-  <label>Choose Hospital</label>
-  <select id="hospital">
-    <option value="">-- Select Hospital --</option>
-    <option>Digfeer Hospital</option>
-    <option>Martini Hospital</option>
-    <option>Banadir Hospital</option>
-    <option>Medina Hospital</option>
-  </select>
+    <!-- Hospital Selection -->
+    <div class="form-group">
+      <label for="hospital">Select Hospital</label>
+      <select id="hospital">
+        <option value="">-- Choose Hospital --</option>
+        <option value="Mogadishu General Hospital">Mogadishu General Hospital</option>
+        <option value="Digfeer Hospital">Digfeer Hospital</option>
+        <option value="Banadir Hospital">Banadir Hospital</option>
+        <option value="SOS Hospital">SOS Hospital</option>
+        <option value="Kalkaal Hospital">Kalkaal Hospital</option>
+      </select>
+    </div>
 
-  <label>Rate the Service</label>
-  <div id="stars">
-    <span data-value="1">★</span>
-    <span data-value="2">★</span>
-    <span data-value="3">★</span>
-    <span data-value="4">★</span>
-    <span data-value="5">★</span>
+    <!-- Cleanliness -->
+    <div class="rating-group">
+      <label>Cleanliness</label>
+      <div class="stars" data-category="cleanliness">
+        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+      </div>
+    </div>
+
+    <!-- Staff -->
+    <div class="rating-group">
+      <label>Staff Professionalism</label>
+      <div class="stars" data-category="staff">
+        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+      </div>
+    </div>
+
+    <!-- Waiting Time -->
+    <div class="rating-group">
+      <label>Waiting Time</label>
+      <div class="stars" data-category="waitingTime">
+        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+      </div>
+    </div>
+
+    <!-- Equipment -->
+    <div class="rating-group">
+      <label>Medical Equipment</label>
+      <div class="stars" data-category="equipment">
+        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+      </div>
+    </div>
+
+    <!-- Overall -->
+    <div class="rating-group">
+      <label>Overall Experience</label>
+      <div class="stars" data-category="overall">
+        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <button class="primary-btn" onclick="submitEvaluation()">
+      Submit Evaluation
+    </button>
+
+    <div id="evaluationMessage" class="feedback"></div>
+
   </div>
-
-  <label>Your Feedback</label>
-  <textarea id="feedback" placeholder="Write your experience..."></textarea>
-
-  <button id="submitBtn">Submit Evaluation</button>
-
-  <p id="formMessage"></p>
 </section>
 
-<section class="results">
-  <h2>Submitted Evaluations</h2>
-  <div id="reviewList"></div>
+<!-- ================= REVIEWS ================= -->
+<section class="section">
+  <h2>Recent Evaluations</h2>
+  <p class="section-note">
+    Live feedback submitted by registered users.
+  </p>
+
+  <div id="reviewContainer"></div>
 </section>
 
-<footer>
-  <p>© 2026 Somali Hospital Evaluation System</p>
+<!-- ================= ANALYTICS ================= -->
+<section class="section">
+  <h2>Hospital Rating Analytics</h2>
+  <p class="section-note">
+    Average ratings calculated dynamically using JavaScript.
+  </p>
+
+  <div id="analyticsBox" class="analytics-grid"></div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="main-footer">
+  <p>
+    Somali Health Review System © 2026 <br>
+    Improving healthcare quality through transparent evaluations.
+  </p>
 </footer>
 
-<script src="script.js"></script>
 </body>
 </html>
