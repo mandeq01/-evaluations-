@@ -1,60 +1,129 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Somali Hospital Evaluation</title>
+  <meta charset="UTF-8">
+  <title>Somali National Hospital Evaluation Platform</title>
+
+  <!-- Main Styles -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
-  <h1>Somali Hospital Evaluation System</h1>
-  <p>Improving healthcare through public feedback</p>
+<!-- ================= HEADER ================= -->
+<header class="main-header">
+  <div class="header-content">
+    <h1>Somali National Hospital Evaluation Platform</h1>
+    <p>
+      A public transparency system designed to improve healthcare
+      quality across Somalia through verified patient feedback.
+    </p>
+  </div>
 </header>
 
-<nav class="nav">
+<!-- ================= NAVIGATION ================= -->
+<nav class="main-nav">
   <a href="index.html">Home</a>
   <a href="hospitals.html">Hospitals</a>
   <a href="evaluation.html">Evaluate</a>
+  <a href="analytics.html">Analytics</a>
   <a href="about.html">About</a>
   <a href="contact.html">Contact</a>
 </nav>
 
-<section>
-  <h2>System Overview</h2>
+<!-- ================= INTRO SECTION ================= -->
+<section class="section">
+  <h2>Why This Platform Exists</h2>
   <p>
-    This platform allows citizens to evaluate hospitals in Somalia
-    based on service quality, cleanliness, staff behavior, and overall experience.
-    Only logged-in users are allowed to submit evaluations to ensure credibility.
+    Healthcare quality improves when patients are heard.
+    This platform allows citizens to evaluate hospitals based on real
+    experiences, encouraging accountability, transparency,
+    and continuous improvement.
+  </p>
+
+  <p>
+    To ensure trust and prevent fake reviews, only verified users
+    are allowed to submit evaluations.
   </p>
 </section>
 
-<section>
+<!-- ================= LOGIN SECTION ================= -->
+<section class="section card">
   <h2>User Login</h2>
+  <p class="section-note">
+    Login is required before submitting any hospital evaluation.
+    This helps maintain the credibility of ratings.
+  </p>
 
-  <label>Username</label>
-  <input type="text" id="username">
+  <div class="form-group">
+    <label for="username">Full Name</label>
+    <input
+      type="text"
+      id="username"
+      placeholder="Example: Hawa Ali"
+    >
+    <small class="hint">
+      Name must contain letters only (no numbers).
+    </small>
+  </div>
 
-  <label>Password</label>
-  <input type="password" id="password">
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input
+      type="password"
+      id="password"
+      placeholder="Strong password required"
+    >
+    <small class="hint">
+      Minimum 8 characters, uppercase, lowercase, number, and symbol.
+    </small>
+  </div>
 
-  <button onclick="loginUser()">Login</button>
+  <button class="primary-btn" onclick="loginUser()">
+    Login Securely
+  </button>
 
-  <p id="loginFeedback"></p>
+  <p id="loginFeedback" class="feedback"></p>
 </section>
 
-<section>
-  <h2>Why Login Is Required</h2>
-  <ul>
-    <li>Prevents fake evaluations</li>
-    <li>Ensures accountability</li>
-    <li>Improves trust in ratings</li>
+<!-- ================= INFORMATION SECTION ================= -->
+<section class="section">
+  <h2>How Hospital Evaluation Works</h2>
+
+  <ul class="info-list">
+    <li>Users login using a validated identity</li>
+    <li>Hospitals are evaluated using multiple criteria</li>
+    <li>Ratings are calculated dynamically</li>
+    <li>Analytics summarize public feedback</li>
+    <li>No page reloads — everything updates instantly</li>
   </ul>
 </section>
 
-<footer>
-  <p>© 2026 Somali Hospital Evaluation System</p>
+<!-- ================= TRUST & SECURITY ================= -->
+<section class="section card">
+  <h2>Security & Data Integrity</h2>
+  <p>
+    This system applies strict validation rules to ensure
+    that submitted data is logical, meaningful, and trustworthy.
+  </p>
+
+  <ul class="info-list">
+    <li>Names with numbers are rejected</li>
+    <li>Weak passwords are blocked</li>
+    <li>Unauthenticated users cannot evaluate hospitals</li>
+    <li>User actions are controlled via JavaScript logic</li>
+  </ul>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="main-footer">
+  <p>
+    © 2026 Somali National Hospital Evaluation Platform<br>
+    JavaScript Programming — Individual Project
+  </p>
 </footer>
 
+<!-- ================= MAIN SCRIPT ================= -->
 <script src="script.js"></script>
+
 </body>
 </html>
