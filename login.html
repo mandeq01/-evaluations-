@@ -1,14 +1,111 @@
-function login() {
-  let user = document.getElementById("username").value;
-  let pass = document.getElementById("password").value;
-  let msg = document.getElementById("loginMsg");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login | Somali Health Review</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
 
-  if (user === "" || pass === "") {
-    msg.textContent = "All fields are required";
-    msg.style.color = "red";
-    return;
-  }
+<!-- ================= HEADER ================= -->
+<header class="main-header">
+  <div class="header-content">
+    <h1>User Login</h1>
+    <p>
+      Login is required to submit hospital evaluations.
+      This ensures fairness, accountability, and data integrity
+      across the Somali healthcare evaluation system.
+    </p>
+  </div>
+</header>
 
-  localStorage.setItem("isLoggedIn", "true");
-  window.location.href = "evaluate.html";
-}
+<!-- ================= NAVIGATION ================= -->
+<nav class="main-nav">
+  <a href="index.html">Home</a>
+  <a href="evaluation.html">Evaluate</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <a href="login.html">Login</a>
+</nav>
+
+<!-- ================= LOGIN FORM ================= -->
+<section class="section">
+  <div class="card">
+
+    <h2>Secure Login</h2>
+    <p class="section-note">
+      Only registered users can access the hospital evaluation form.
+      Please enter your correct details.
+    </p>
+
+    <!-- Username -->
+    <div class="form-group">
+      <label for="username">Full Name</label>
+      <input
+        type="text"
+        id="username"
+        placeholder="Example: Ahmed Mohamed"
+      >
+      <small>
+        Name must contain letters only (no numbers or symbols).
+      </small>
+    </div>
+
+    <!-- Password -->
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        placeholder="Enter strong password"
+      >
+      <small>
+        Password must contain at least:
+        8 characters, one uppercase letter, one lowercase letter,
+        one number, and one special character.
+      </small>
+    </div>
+
+    <!-- Action -->
+    <button class="primary-btn" onclick="loginUser()">
+      Login
+    </button>
+
+    <!-- Feedback -->
+    <div id="loginFeedback" class="feedback"></div>
+
+  </div>
+</section>
+
+<!-- ================= INFORMATION SECTION ================= -->
+<section class="section">
+  <div class="card">
+
+    <h2>Why Login Is Required</h2>
+
+    <ul class="info-list">
+      <li>Prevents fake or repeated evaluations</li>
+      <li>Ensures reliable hospital rating data</li>
+      <li>Protects the integrity of the system</li>
+      <li>Allows tracking of evaluation trends</li>
+    </ul>
+
+    <p class="section-note">
+      This system follows best practices used by
+      real-world healthcare feedback platforms.
+    </p>
+
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="main-footer">
+  <p>
+    Somali Health Review System © 2026 <br>
+    Secure • Transparent • Reliable
+  </p>
+</footer>
+
+</body>
+</html>
