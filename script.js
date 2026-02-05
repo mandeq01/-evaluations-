@@ -343,3 +343,92 @@ window.addEventListener("load", () => {
   setupStarRatings();
   generateAnalytics();
 });
+/* ======================================================
+   SIGNUP / REGISTRATION SYSTEM
+====================================================== */
+
+function registerUser() {
+  const nameInput = document.getElementById("signupName");
+  const emailInput = document.getElementById("signupEmail");
+  const passInput = document.getElementById("signupPassword");
+  const confirmInput = document.getElementById("confirmPassword");
+  const feedback = document.getElementById("signupFeedback");
+
+  if (!nameInput || !emailInput || !passInput || !confirmInput) return;
+
+  const name = nameInput.value.trim();
+  const email = emailInput.value.trim();
+  const password = passInput.value;
+  const confirmPassword = confirmInput.value;
+
+  /* ---------- EMPTY CHECK ---------- */
+  if (name === "" || email === "" || password === "" || confirmPassword === "") {
+    showMessage(feedback, "All fields are required.", "error");
+    return;
+  }
+
+  /* ---------- NAME VALIDATION ---------- */
+  if (!isValidName(name)) {
+    showMessage(
+      feedback,
+      "Name must contain letters only. Numbers are not allowed.",
+      "error"
+    );
+    return;
+  }
+
+  /* ---------- EMAIL VALIDATION ---------- */
+  if (!email.includes("@") || !email.includes(".")) {
+    showMessage(
+      feedback,
+      "Please enter a valid email address.",
+      "error"
+    );
+    return;
+  }
+
+  /* ---------- PASSWORD STRENGTH ---------- */
+  if (!isStrongPassword(password)) {
+    showMessage(
+      feedback,
+      "Password is not strong enough.",
+      "error"
+    );
+    return;
+  }
+
+  /* ---------- PASSWORD MATCH ---------- */
+  if (password !== confirmPassword) {
+    showMessage(
+      feedback,
+      "Passwords do not match.",
+      "error"
+    );
+    return;
+  }
+
+  /* ---------- SAVE USER (SIMULATED) ---------- */
+  const user = {
+    name: name,
+    email: email
+  };
+
+  localStorage.setItem("registeredUser", JSON.stringify(user));
+
+  showMessage(
+    feedback,
+    "Account created successfully. You can now login.",
+    "success"
+  );
+
+  /* ---------- CLEAR FORM ---------- */
+  nameInput.value = "";
+  emailInput.value = "";
+  passInput.value = "";
+  confirmInput.value = "";
+
+  /* ---------- OPTIONAL REDIRECT ---------- */
+  setTimeout(() => {
+    window.location.href = "login.html";
+  }, 2000);
+}
