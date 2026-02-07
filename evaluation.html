@@ -134,6 +134,18 @@
     Improving healthcare quality through transparent evaluations.
   </p>
 </footer>
+  <script>
+    function resetAllData() {
+  evaluations = []; // Clear in-memory ratings
+  localStorage.removeItem("evaluations"); // Remove saved data if any
+
+  // Clear UI
+  document.getElementById("reviewContainer").innerHTML = "";
+  document.getElementById("analyticsBox").innerHTML = "";
+
+  alert("All evaluations have been reset!"); // Simple feedback
+}
+</script>
 
 </body>
 </html>
