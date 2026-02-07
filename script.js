@@ -1,11 +1,5 @@
-/* ======================================================
-   GLOBAL DATA STORAGE
-====================================================== */
-
-// Store all evaluations in memory (array of objects)
+// ================= DATA STORAGE =================
 let evaluations = [];
-
-// Current evaluation being filled
 let currentEvaluation = {
   hospital: "",
   cleanliness: 0,
@@ -13,422 +7,144 @@ let currentEvaluation = {
   waitingTime: 0,
   equipment: 0,
   overall: 0,
-  average: 0,
   reviewer: ""
 };
 
-/* ======================================================
-   VALIDATION UTILITIES
-====================================================== */
 
-// Name must contain letters and spaces only
-function isValidName(name) {
-  const pattern = /^[A-Za-z\s]+$/;
-  return pattern.test(name);
+// ================= VALIDATIONS =================
+function isValidName(name) { return /^[A-Za-z\s]+$/.test(name); }
+function isStrongPassword(pass) { return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(pass); }
+function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+
+// ================= FEEDBACK =================
+function showFeedback(element, message, color) {
+  if (!element) return;
+  element.textContent = message;
+  element.style.color = color;
 }
 
-// Strong password validation
-function isStrongPassword(password) {
-  const pattern =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
-  return pattern.test(password);
+// ================= SIGNUP =================
+function registerUser() {
+  const name = document.getElementById("signupName").value.trim();
+  const email = document.getElementById("signupEmail").value.trim();
+  const password = document.getElementById("signupPassword").value;
+  const confirm = document.getElementById("confirmPassword").value;
+  const feedback = document.getElementById("signupFeedback");
+
+  if (!name || !email || !password || !confirm) { showFeedback(feedback,"All fields required","red"); return; }
+  if (!isValidName(name)) { showFeedback(feedback,"Name must be letters only","red"); return; }
+  if (!isValidEmail(email)) { showFeedback(feedback,"Enter valid email","red"); return; }
+  if (!isStrongPassword(password)) { showFeedback(feedback,"Password not strong enough","red"); return; }
+  if (password !== confirm) { showFeedback(feedback,"Passwords do not match","red"); return; }
+
+  localStorage.setItem("registeredUser", JSON.stringify({name,email,password}));
+  showFeedback(feedback,"Signup successful! Redirecting...","green");
+  setTimeout(function(){ window.location.href="login.html"; }, 1500);
 }
 
-/* ======================================================
-   LOGIN SYSTEM
-====================================================== */
 
+// ================= LOGIN =================\
 function loginUser() {
-  const nameInput = document.getElementById("username");
-  const passInput = document.getElementById("password");
+  const name = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value;
   const feedback = document.getElementById("loginFeedback");
 
-  if (!nameInput || !passInput) return;
+  const savedUser = JSON.parse(localStorage.getItem("registeredUser")||"null");
+  if (!savedUser) { showFeedback(feedback,"No account found. Signup first.","red"); return; }
+  if (!name || !password) { showFeedback(feedback,"All fields required","red"); return; }
+  if (name!==savedUser.name || password!==savedUser.password) { showFeedback(feedback,"Invalid credentials","red"); return; }
 
-  const name = nameInput.value.trim();
-  const password = passInput.value;
-
-  // Empty check
-  if (name === "" || password === "") {
-    showMessage(feedback, "All fields are required.", "error");
-    return;
-  }
-
-  // Name validation
-  if (!isValidName(name)) {
-    showMessage(
-      feedback,
-      "Name must contain letters only (no numbers or symbols).",
-      "error"
-    );
-    return;
-  }
-
-  // Password validation
-  if (!isStrongPassword(password)) {
-    showMessage(
-      feedback,
-      "Password must be strong (8+ chars, upper, lower, number, symbol).",
-      "error"
-    );
-    return;
-  }
-
-  // Save login state
-  localStorage.setItem("isLoggedIn", "true");
-  localStorage.setItem("userName", name);
-
-  showMessage(
-    feedback,
-    "Login successful. Evaluation access granted.",
-    "success"
-  );
+  localStorage.setItem("isLoggedIn","true");
+  localStorage.setItem("userName",name);
+  showFeedback(feedback,"Login successful","green");
 }
 
-/* ======================================================
-   PAGE PROTECTION (IMPORTANT)
-====================================================== */
-
+// ================= EVALUATION PAGE PROTECTION =================
 function protectEvaluationPage() {
   const loggedIn = localStorage.getItem("isLoggedIn");
-  const warning = document.getElementById("loginWarning");
+  const feedback = document.getElementById("loginWarning");
   const form = document.querySelector(".evaluation-form");
-
   if (!form) return;
-
-  if (!loggedIn) {
-    if (warning) {
-      warning.textContent = "You must login to evaluate hospitals.";
-      warning.style.color = "red";
-    }
-
-    // Lock the evaluation form
-    form.classList.add("locked");
-  } else {
-    if (warning) {
-      const user = localStorage.getItem("userName");
-      warning.textContent = "Welcome " + user + ". You can evaluate hospitals.";
-      warning.style.color = "green";
-    }
-  }
+  if (!loggedIn) { if(feedback){ showFeedback(feedback,"Login required to evaluate","red"); } form.classList.add("locked"); }
+  else { if(feedback){ showFeedback(feedback,"Welcome "+localStorage.getItem("userName"),"green"); } }
 }
 
-/* ======================================================
-   STAR RATING SYSTEM (MULTI-CRITERIA)
-====================================================== */
-
+// ================= STAR RATINGS =================
 function setupStarRatings() {
   const starGroups = document.querySelectorAll(".stars");
-
-  starGroups.forEach(group => {
+  starGroups.forEach(function(group){
     const category = group.dataset.category;
-    const stars = group.querySelectorAll("span");
-
-    stars.forEach((star, index) => {
-      star.addEventListener("click", () => {
-        updateStars(group, index + 1);
-        currentEvaluation[category] = index + 1;
+    group.querySelectorAll("span").forEach(function(star,index){
+      star.addEventListener("click",function(){ 
+        group.querySelectorAll("span").forEach(function(s,i){ s.classList.toggle("active",i<=index); });
+        currentEvaluation[category]=index+1; 
       });
     });
   });
 }
 
-function updateStars(group, value) {
-  const stars = group.querySelectorAll("span");
-  stars.forEach((star, index) => {
-    star.classList.toggle("active", index < value);
-  });
-}
-
-/* ======================================================
-   EVALUATION SUBMISSION
-====================================================== */
-
+// ================= SUBMIT EVALUATION =================
 function submitEvaluation() {
-  const hospitalSelect = document.getElementById("hospital");
-  const feedbackBox = document.getElementById("evaluationMessage");
-
-  if (!hospitalSelect) return;
-
-  currentEvaluation.hospital = hospitalSelect.value;
+  const hospital = document.getElementById("hospital").value;
+  const feedback = document.getElementById("evaluationMessage");
+  currentEvaluation.hospital = hospital;
   currentEvaluation.reviewer = localStorage.getItem("userName");
 
-  // Validation
-  if (
-    currentEvaluation.hospital === "" ||
-    currentEvaluation.cleanliness === 0 ||
-    currentEvaluation.staff === 0 ||
-    currentEvaluation.waitingTime === 0 ||
-    currentEvaluation.equipment === 0 ||
-    currentEvaluation.overall === 0
-  ) {
-    showMessage(
-      feedbackBox,
-      "Please complete all rating categories before submitting.",
-      "error"
-    );
-    return;
+  if (!hospital || currentEvaluation.cleanliness===0 || currentEvaluation.staff===0 || currentEvaluation.waitingTime===0 || currentEvaluation.equipment===0 || currentEvaluation.overall===0) {
+    showFeedback(feedback,"Complete all ratings","red"); return;
   }
 
-  // Calculate average
-  currentEvaluation.average = calculateAverage(currentEvaluation);
+  currentEvaluation.average=((currentEvaluation.cleanliness+currentEvaluation.staff+currentEvaluation.waitingTime+currentEvaluation.equipment+currentEvaluation.overall)/5).toFixed(1);
+  evaluations.push({...currentEvaluation});
+  renderEvaluations(); generateAnalytics();
+  showFeedback(feedback,"Evaluation submitted!","green");
 
-  // Save evaluation
-  evaluations.push({ ...currentEvaluation });
-
-  // Display reviews dynamically
-  renderEvaluations();
-
-  showMessage(
-    feedbackBox,
-    "Evaluation submitted successfully.",
-    "success"
-  );
-
-  resetEvaluationForm();
+  currentEvaluation={hospital:"",cleanliness:0,staff:0,waitingTime:0,equipment:0,overall:0,reviewer:""};
+  document.getElementById("hospital").value="";
+  document.querySelectorAll(".stars span").forEach(function(star){ star.classList.remove("active"); });
 }
 
-/* ======================================================
-   CALCULATIONS
-====================================================== */
-
-function calculateAverage(e) {
-  const total =
-    e.cleanliness +
-    e.staff +
-    e.waitingTime +
-    e.equipment +
-    e.overall;
-
-  return (total / 5).toFixed(1);
-}
-
-/* ======================================================
-   DISPLAY REVIEWS (DOM MANIPULATION)
-====================================================== */
-
+// ================= RENDER EVALUATIONS =================
 function renderEvaluations() {
-  const container = document.getElementById("reviewContainer");
-  if (!container) return;
-
-  container.innerHTML = "";
-
-  evaluations.forEach(e => {
-    const card = document.createElement("div");
-    card.className = "review-card";
-
-    card.innerHTML = `
-      <strong>${e.hospital}</strong><br>
-      Reviewer: ${e.reviewer}<br>
-      Cleanliness: ${e.cleanliness} ★<br>
-      Staff: ${e.staff} ★<br>
-      Waiting Time: ${e.waitingTime} ★<br>
-      Equipment: ${e.equipment} ★<br>
-      Overall: ${e.overall} ★<br>
-      <strong>Average Rating: ${e.average} ★</strong>
-    `;
-
+  const container=document.getElementById("reviewContainer"); if(!container) return;
+  container.innerHTML="";
+  evaluations.forEach(function(e){
+    const card=document.createElement("div"); card.className="review-card";
+    card.innerHTML="<strong>"+e.hospital+"</strong><br>Reviewer: "+e.reviewer+
+    "<br>Cleanliness: "+e.cleanliness+" ★<br>Staff: "+e.staff+" ★<br>Waiting: "+e.waitingTime+
+    " ★<br>Equipment: "+e.equipment+" ★<br>Overall: "+e.overall+" ★<br><strong>Average: "+e.average+" ★</strong>";
     container.appendChild(card);
   });
 }
 
-/* ======================================================
-   RESET FORM AFTER SUBMISSION
-====================================================== */
-
-function resetEvaluationForm() {
-  currentEvaluation = {
-    hospital: "",
-    cleanliness: 0,
-    staff: 0,
-    waitingTime: 0,
-    equipment: 0,
-    overall: 0,
-    average: 0,
-    reviewer: ""
-  };
-
-  const stars = document.querySelectorAll(".stars span");
-  stars.forEach(star => star.classList.remove("active"));
-
-  const hospitalSelect = document.getElementById("hospital");
-  if (hospitalSelect) hospitalSelect.value = "";
-}
-
-/* ======================================================
-   ANALYTICS GENERATION
-====================================================== */
-
+// ================= ANALYTICS =================
 function generateAnalytics() {
-  const analyticsBox = document.getElementById("analyticsBox");
-  if (!analyticsBox) return;
-
-  let summary = {};
-
-  evaluations.forEach(e => {
-    if (!summary[e.hospital]) {
-      summary[e.hospital] = [];
-    }
-    summary[e.hospital].push(parseFloat(e.average));
-  });
-
-  analyticsBox.innerHTML = "";
-
-  for (let hospital in summary) {
-    const avg =
-      summary[hospital].reduce((a, b) => a + b, 0) /
-      summary[hospital].length;
-
-    const div = document.createElement("div");
-    div.className = "analytics-box";
-    div.innerHTML = `
-      <h3>${hospital}</h3>
-      <p>Average Rating: ${avg.toFixed(1)} ★</p>
-      <p>Total Reviews: ${summary[hospital].length}</p>
-    `;
-
+  const analyticsBox=document.getElementById("analyticsBox"); if(!analyticsBox) return;
+  let summary={};
+  evaluations.forEach(function(e){ if(!summary[e.hospital]) summary[e.hospital]=[]; summary[e.hospital].push(parseFloat(e.average)); });
+  analyticsBox.innerHTML="";
+  for(let hospital in summary){
+    const avg=summary[hospital].reduce(function(a,b){return a+b;},0)/summary[hospital].length;
+    const div=document.createElement("div"); div.className="analytics-box";
+    div.innerHTML="<h3>"+hospital+"</h3><p>Average: "+avg.toFixed(1)+" ★</p><p>Total Reviews: "+summary[hospital].length+"</p>";
     analyticsBox.appendChild(div);
   }
 }
 
-/* ======================================================
-   CONTACT FORM
-====================================================== */
-
+// ================= CONTACT FORM =================
 function sendMessage() {
-  const name = document.getElementById("contactName");
-  const email = document.getElementById("contactEmail");
-  const message = document.getElementById("contactMessage");
-  const feedback = document.getElementById("contactFeedback");
-
-  if (!name || !email || !message) return;
-
-  if (
-    name.value.trim() === "" ||
-    email.value.trim() === "" ||
-    message.value.trim() === ""
-  ) {
-    showMessage(feedback, "All fields are required.", "error");
-    return;
-  }
-
-  showMessage(
-    feedback,
-    "Thank you for your message. We will respond shortly.",
-    "success"
-  );
-
-  name.value = "";
-  email.value = "";
-  message.value = "";
+  const name=document.getElementById("contactName").value.trim();
+  const email=document.getElementById("contactEmail").value.trim();
+  const message=document.getElementById("contactMessage").value.trim();
+  const feedback=document.getElementById("contactFeedback");
+  if(!name || !email || !message){ showFeedback(feedback,"All fields required","red"); return; }
+  if(!isValidName(name)){ showFeedback(feedback,"Name must be letters only","red"); return; }
+  if(!isValidEmail(email)){ showFeedback(feedback,"Enter valid email","red"); return; }
+  showFeedback(feedback,"Message sent successfully!","green");
+  document.getElementById("contactName").value=""; document.getElementById("contactEmail").value=""; document.getElementById("contactMessage").value="";
 }
 
-/* ======================================================
-   UTILITY: FEEDBACK MESSAGES
-====================================================== */
-
-function showMessage(element, text, type) {
-  if (!element) return;
-
-  element.textContent = text;
-  element.className = "feedback " + type;
-}
-
-/* ======================================================
-   INITIALIZATION ON PAGE LOAD
-====================================================== */
-
-window.addEventListener("load", () => {
-  protectEvaluationPage();
-  setupStarRatings();
-  generateAnalytics();
+// ================= INIT =================
+window.addEventListener("load",function(){
+  protectEvaluationPage(); setupStarRatings(); generateAnalytics();
 });
-/* ======================================================
-   SIGNUP / REGISTRATION SYSTEM
-====================================================== */
-
-function registerUser() {
-  const nameInput = document.getElementById("signupName");
-  const emailInput = document.getElementById("signupEmail");
-  const passInput = document.getElementById("signupPassword");
-  const confirmInput = document.getElementById("confirmPassword");
-  const feedback = document.getElementById("signupFeedback");
-
-  if (!nameInput || !emailInput || !passInput || !confirmInput) return;
-
-  const name = nameInput.value.trim();
-  const email = emailInput.value.trim();
-  const password = passInput.value;
-  const confirmPassword = confirmInput.value;
-
-  /* ---------- EMPTY CHECK ---------- */
-  if (name === "" || email === "" || password === "" || confirmPassword === "") {
-    showMessage(feedback, "All fields are required.", "error");
-    return;
-  }
-
-  /* ---------- NAME VALIDATION ---------- */
-  if (!isValidName(name)) {
-    showMessage(
-      feedback,
-      "Name must contain letters only. Numbers are not allowed.",
-      "error"
-    );
-    return;
-  }
-
-  /* ---------- EMAIL VALIDATION ---------- */
-  if (!email.includes("@") || !email.includes(".")) {
-    showMessage(
-      feedback,
-      "Please enter a valid email address.",
-      "error"
-    );
-    return;
-  }
-
-  /* ---------- PASSWORD STRENGTH ---------- */
-  if (!isStrongPassword(password)) {
-    showMessage(
-      feedback,
-      "Password is not strong enough.",
-      "error"
-    );
-    return;
-  }
-
-  /* ---------- PASSWORD MATCH ---------- */
-  if (password !== confirmPassword) {
-    showMessage(
-      feedback,
-      "Passwords do not match.",
-      "error"
-    );
-    return;
-  }
-
-  /* ---------- SAVE USER (SIMULATED) ---------- */
-  const user = {
-    name: name,
-    email: email
-  };
-
-  localStorage.setItem("registeredUser", JSON.stringify(user));
-
-  showMessage(
-    feedback,
-    "Account created successfully. You can now login.",
-    "success"
-  );
-
-  /* ---------- CLEAR FORM ---------- */
-  nameInput.value = "";
-  emailInput.value = "";
-  passInput.value = "";
-  confirmInput.value = "";
-
-  /* ---------- OPTIONAL REDIRECT ---------- */
-  setTimeout(() => {
-    window.location.href = "login.html";
-  }, 2000);
-}
