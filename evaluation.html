@@ -137,15 +137,21 @@
   </p>
 </footer>
   <script>
-    function resetAllData() {
-  evaluations = []; // Clear in-memory ratings
-  localStorage.removeItem("evaluations"); // Remove saved data if any
+   function resetAllData() {
+  const confirmReset = confirm("Are you sure? This will delete all evaluations and user accounts.");
+  if (!confirmReset) return;
 
-  // Clear UI
-  document.getElementById("reviewContainer").innerHTML = "";
-  document.getElementById("analyticsBox").innerHTML = "";
+  localStorage.clear(); // Removes everything from localStorage
 
-  alert("All evaluations have been reset!"); // Simple feedback
+  // Optional: Reset the in-memory evaluations array
+  evaluations = [];
+  renderEvaluations();   // Clear displayed evaluations
+  generateAnalytics();   // Clear analytics display
+
+  alert("All data has been reset. You must sign up again.");
+  
+  // Redirect to signup page
+  window.location.href = "signup.html";
 }
 </script>
 
